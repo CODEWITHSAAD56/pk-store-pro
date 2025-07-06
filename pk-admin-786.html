@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Panel - PK Store Pro</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="auth-body">
+  <div class="auth-card">
+    <h1 class="auth-logo">🌍 PK Store Pro Admin</h1>
+    <h2>Add New Product</h2>
+
+    <form id="productForm">
+      <input type="text" id="productName" placeholder="Product Name" required />
+      <input type="number" id="productPrice" placeholder="Price" required />
+      <input type="file" id="productImage" required />
+      <button type="submit" class="auth-btn">Upload Product</button>
+    </form>
+
+    <button onclick="logout()" class="auth-btn" style="background: red; margin-top: 10px;">Logout</button>
+  </div>
+
+  <script src="js/admin.js"></script>
+</body>
+</html>

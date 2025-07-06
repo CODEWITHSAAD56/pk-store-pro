@@ -3,15 +3,23 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>PK Store Pro - Premium</title>
+  <title>Login - PK Store Pro</title>
   <link rel="stylesheet" href="css/style.css" />
 </head>
-<body>
-  <div class="container">
-    <h1>Welcome to PK Store Pro Premium</h1>
-    <p>🔥 Fully animated premium store is ready</p>
-    <footer>✨ Made for Hammad Arshad 👑</footer>
+<body class="auth-body">
+  <div class="auth-card">
+    <h1 class="auth-logo">🌍 PK Store Pro</h1>
+    <h2>Login</h2>
+
+    <form id="loginForm">
+      <input type="email" id="loginEmail" placeholder="Email" required />
+      <input type="password" id="loginPassword" placeholder="Password" required />
+      <button type="submit" class="auth-btn">Login</button>
+    </form>
+
+    <p class="auth-footer">Don't have an account? <a href="signup.html">Sign up</a></p>
   </div>
-  <script src="js/main.js"></script>
+
+  <script src="js/auth.js"></script>
 </body>
 </html>
