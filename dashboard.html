@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard - PK INTERNATIONAL</title>
+  <link rel="stylesheet" href="style.css"/>
+  <script src="script.js"></script>
+</head>
+<body>
+  <div class="dashboard">
+    <aside class="sidebar">
+      <h1>PK INTERNATIONAL</h1>
+      <div class="search-bar">
+        <input type="text" id="sidebarSearch" placeholder="Search..." oninput="searchSidebar()"/>
+      </div>
+      <ul>
+        <li onclick="showContent('home')">Home</li>
+        <li onclick="toggleSubMenu('ordersSub')">Orders</li>
+        <ul id="ordersSub" class="submenu"><li>Drafts</li></ul>
+        <li onclick="toggleSubMenu('productsSub')">Products</li>
+        <ul id="productsSub" class="submenu">
+          <li>Add Product</li>
+          <li>Collections</li>
+          <li>Inventory</li>
+          <li>Purchase Orders</li>
+          <li>Gift Cards</li>
+          <li>Transfers</li>
+        </ul>
+        <li onclick="toggleSubMenu('customersSub')">Customers</li>
+        <ul id="customersSub" class="submenu"><li>Segments</li></ul>
+        <li onclick="toggleSubMenu('marketingSub')">Marketing</li>
+        <ul id="marketingSub" class="submenu"><li>Campaigns</li><li>Automation</li></ul>
+        <li onclick="toggleSubMenu('discountsSub')">Discounts</li>
+        <ul id="discountsSub" class="submenu"><li>Create Discount</li></ul>
+        <li onclick="toggleSubMenu('analyticsSub')">Analytics</li>
+        <ul id="analyticsSub" class="submenu"><li>Reports</li><li>Live View</li></ul>
+        <li class="settings-header" onclick="toggleSubMenu('settingsSub')">Settings</li>
+        <ul id="settingsSub" class="submenu"><li>General</li></ul>
+        <li onclick="logout()">Logout</li>
+      </ul>
+    </aside>
+    <main class="main-content" id="mainContent">
+      <div class="top-bar">
+        <div class="store-info">
+          <h2>PK INTERNATIONAL</h2>
+          <p id="welcomeText">Welcome to your admin dashboard</p>
+        </div>
+        <button onclick="logout()" class="btn">Logout</button>
+      </div>
+      <div id="homeContent" class="content-section">
+        <h3 id="homeWelcomeText">Welcome back to store</h3>
+      </div>
+      <div id="settingsContent" class="content-section" style="display:none;">
+        <h3>Settings</h3>
+        <p>Manage your preferences here.</p>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Signup - PK INTERNATIONAL</title>
+  <link rel="stylesheet" href="style.css"/>
+  
+  <!-- ✅ Use Firebase version 8 CDN -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+  
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <div class="auth-container">
+    <div class="auth-box">
+      <h2>Signup</h2>
+
+      <!-- ✅ Fixed form with onsubmit -->
+      <form id="signupForm" onsubmit="return handleSignup(event)">
+        <input type="text" id="signupName" placeholder="Name" required/>
+        <input type="email" id="signupEmail" placeholder="Email" required/>
+        <input type="password" id="signupPassword" placeholder="Password" required/>
+        <button type="submit" class="btn">Signup</button>
+        <p>Already have an account? <a href="index.html">Login</a></p>
+      </form>
+
+    </div>
+  </div>
+</body>
+</html>
