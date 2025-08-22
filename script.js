@@ -109,3 +109,53 @@ function searchSidebar() {
     item.classList.toggle('highlight', item.textContent.toLowerCase().includes(input));
   });
 }
+//  Product Upload to Firebase
+document.getElementById("productForm").addEventListener("submit", function (e) {
+  e.preventDefault();
+  const name = document.getElementById("productName").value;
+  const price = document.getElementById("productPrice").value;
+  const description = document.getElementById("productDescription").value;
+
+  const newProduct = {
+    name,
+    price,
+    description,
+    createdAt: new Date().toISOString(),
+  };
+
+  db.ref("products").push(newProduct).then(() => {
+    alert("✅ Product uploaded successfully!");
+    document.getElementById("productForm").reset();
+  });
+});
+
+//  Payment Option Selection
+document.getElementById("paymentOptionsForm").addEventListener("submit", function (e) {
+  e.preventDefault();
+
+  const selected = document.querySelector("input[name='paymentMethod']:checked").value;
+  const detailsDiv = document.getElementById("paymentDetails");
+
+  if (selected === "JazzCash") {
+    detailsDiv.innerHTML = `
+      <p><strong>JazzCash Number:</strong> 0300-XXXXXXX</p>
+      <p><strong>Account Title:</strong> PK International</p>
+      <p>Please share screenshot via <a href="https://wa.me/923001234567" target="_blank">WhatsApp</a></p>
+    `;
+  } else if (selected === "EasyPaisa") {
+    detailsDiv.innerHTML = `
+      <p><strong>EasyPaisa Number:</strong> 0345-XXXXXXX</p>
+      <p><strong>Account Title:</strong> PK International</p>
+      <p>Please share screenshot via <a href="https://wa.me/923001234567" target="_blank">WhatsApp</a></p>
+    `;
+  } else if (selected === "Stripe") {
+    window.open("https://buy.stripe.com/test_123456789", "_blank");
+  }
+
+  // Optional: Store selected payment method
+  const userId = "user-" + Date.now();
+  db.ref("payments/" + userId).set({
+    method: selected,
+    createdAt: new Date().toISOString()
+  });
+});

@@ -112,6 +112,7 @@ body {
     flex: 1;
     padding: 1rem;
     background: rgba(128, 128, 128, 0.24);
+    border-color: #33333300;
 }
 .top-bar {
     display: flex;
@@ -137,3 +138,147 @@ body {
 .highlight {
     background-color: rgba(0, 0, 255, 0.253);
 }
+.dashboard-widgets {
+    margin-top: 40px;
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+  
+  .widget-box {
+    flex: 1;
+    min-width: 300px;
+    max-width: 400px;
+    background: rgba(255, 255, 255, 0);
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+  
+  .widget-box h2 {
+    margin-bottom: 15px;
+    color: #5c6bc0;
+  }
+  
+  .widget-box input,
+  .widget-box textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+  }
+  
+  .widget-box .btn {
+    width: 100%;
+  }
+  /* === Sidebar Icons === */
+.sidebar li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 0.5rem;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    position: relative;
+  }
+  
+  .sidebar li:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+  
+  /* Icon inside <li> */
+  .sidebar .icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* Arrow icon */
+  .sidebar .arrow {
+    transition: transform 0.3s ease;
+  }
+  
+  /* Rotate arrow when active */
+  .sidebar li.active > .arrow {
+    transform: rotate(360deg);
+  }
+  
+  /* Submenu */
+  .submenu {
+    display: none;
+    padding-left: 1.5rem;
+    background: rgba(255, 255, 255, 0.05);
+    transition: all 0.3s ease;
+  }
+  
+  .submenu li {
+    font-size: 0.9rem;
+    padding: 0.4rem 0.5rem;
+    border-left: 2px solid transparent;
+    transition: 0.2s ease;
+  }
+  
+  .submenu li:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-left: 2px solid #5c6bc0;
+  }
+  .sidebar li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 0.7rem;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    font-size: 15px;
+    position: relative;
+  }
+  
+  .sidebar li:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+  }
+  
+  .sidebar li .icon {
+    font-size: 16px;
+    margin-right: 8px;
+    width: 20px;
+    display: inline-block;
+    text-align: center;
+  }
+  
+  .sidebar li .text {
+    flex-grow: 1;
+    padding-left: 6px;
+  }
+  
+  .sidebar .arrow {
+    font-size: 10px;
+    transition: transform 0.3s ease;
+    transform-origin: center;
+    margin-left: 8px;
+  }
+  
+  .sidebar li.active > .arrow {
+    transform: rotate(90deg);
+  }
+  
+  /* Submenu */
+  .submenu {
+    display: none;
+    padding-left: 35px;
+    margin-top: 2px;
+    border-left: 2px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  .submenu li {
+    font-size: 14px;
+    padding: 0.4rem 0.5rem;
+    transition: background 0.2s ease;
+  }
+  
+  .submenu li:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+  }

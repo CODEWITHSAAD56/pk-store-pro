@@ -15,29 +15,91 @@
         <input type="text" id="sidebarSearch" placeholder="Search..." oninput="searchSidebar()"/>
       </div>
       <ul>
-        <li onclick="showContent('home')">Home</li>
-        <li onclick="toggleSubMenu('ordersSub')">Orders</li>
-        <ul id="ordersSub" class="submenu"><li>Drafts</li></ul>
-        <li onclick="toggleSubMenu('productsSub')">Products</li>
-        <ul id="productsSub" class="submenu">
-          <li>Add Product</li>
-          <li>Collections</li>
-          <li>Inventory</li>
-          <li>Purchase Orders</li>
-          <li>Gift Cards</li>
-          <li>Transfers</li>
-        </ul>
-        <li onclick="toggleSubMenu('customersSub')">Customers</li>
-        <ul id="customersSub" class="submenu"><li>Segments</li></ul>
-        <li onclick="toggleSubMenu('marketingSub')">Marketing</li>
-        <ul id="marketingSub" class="submenu"><li>Campaigns</li><li>Automation</li></ul>
-        <li onclick="toggleSubMenu('discountsSub')">Discounts</li>
-        <ul id="discountsSub" class="submenu"><li>Create Discount</li></ul>
-        <li onclick="toggleSubMenu('analyticsSub')">Analytics</li>
-        <ul id="analyticsSub" class="submenu"><li>Reports</li><li>Live View</li></ul>
-        <li class="settings-header" onclick="toggleSubMenu('settingsSub')">Settings</li>
-        <ul id="settingsSub" class="submenu"><li>General</li></ul>
-        <li onclick="logout()">Logout</li>
+        <ul>
+<ul>
+  <li onclick="showContent('home')">
+    <span class="icon">🏠</span>
+    <span class="text">Home</span>
+    <span class="arrow" id="arrow-home"></span>
+  </li>
+
+  <li onclick="toggleSubMenu('ordersSub')">
+    <span class="icon">📦</span>
+    <span class="text">Orders</span>
+    <span class="arrow" id="arrow-ordersSub">&#9654;</span>
+  </li>
+  <ul id="ordersSub" class="submenu">
+    <li>Drafts</li>
+    <li>Abandoned</li>
+    <li>Completed</li>
+  </ul>
+  <li onclick="toggleSubMenu('productsSub')">
+    <span class="icon">🛍️</span>
+    <span class="text">Products</span>
+    <span class="arrow" id="arrow-productsSub">&#9654;</span>
+  </li>
+  <ul id="productsSub" class="submenu">
+    <li>Add Product</li>
+    <li>Collections</li>
+    <li>Inventory</li>
+    <li>Purchase Orders</li>
+    <li>Gift Cards</li>
+    <li>Transfers</li>
+  </ul>
+  <li onclick="toggleSubMenu('customersSub')">
+    <span class="icon">👥</span>
+    <span class="text">Customers</span>
+    <span class="arrow" id="arrow-customersSub">&#9654;</span>
+  </li>
+  <ul id="customersSub" class="submenu">
+    <li>All Customers</li>
+    <li>Segments</li>
+  </ul>
+
+  <li onclick="toggleSubMenu('marketingSub')">
+    <span class="icon">📢</span>
+    <span class="text">Marketing</span>
+    <span class="arrow" id="arrow-marketingSub">&#9654;</span>
+  </li>
+  <ul id="marketingSub" class="submenu">
+    <li>Campaigns</li>
+    <li>Automation</li>
+  </ul>
+  <li onclick="toggleSubMenu('discountsSub')">
+    <span class="icon">💸</span>
+    <span class="text">Discounts</span>
+    <span class="arrow" id="arrow-discountsSub">&#9654;</span>
+  </li>
+  <ul id="discountsSub" class="submenu">
+    <li>Create Discount</li>
+  </ul>
+  <li onclick="toggleSubMenu('analyticsSub')">
+    <span class="icon">📊</span>
+    <span class="text">Analytics</span>
+    <span class="arrow" id="arrow-analyticsSub">&#9654;</span>
+  </li>
+  <ul id="analyticsSub" class="submenu">
+    <li>Reports</li>
+    <li>Live View</li>
+  </ul>
+
+  <li onclick="toggleSubMenu('settingsSub')">
+    <span class="icon">⚙️</span>
+    <span class="text">Settings</span>
+    <span class="arrow" id="arrow-settingsSub">&#9654;</span>
+  </li>
+  <ul id="settingsSub" class="submenu">
+    <li>General</li>
+    <li>Account</li>
+    <li>Notifications</li>
+  </ul>
+
+  <li onclick="logout()">
+    <span class="icon">🚪</span>
+    <span class="text">Logout</span>
+  </li>
+</ul>
+        </ul>        
       </ul>
     </aside>
     <main class="main-content" id="mainContent">
@@ -46,16 +108,37 @@
           <h2>PK INTERNATIONAL</h2>
           <p id="welcomeText">Welcome to your admin dashboard</p>
         </div>
+        
         <button onclick="logout()" class="btn">Logout</button>
       </div>
       <div id="homeContent" class="content-section">
         <h3 id="homeWelcomeText">Welcome back to store</h3>
-      </div>
-      <div id="settingsContent" class="content-section" style="display:none;">
-        <h3>Settings</h3>
-        <p>Manage your preferences here.</p>
-      </div>
-    </main>
+        <!--  DASHBOARD SECTION BELOW WELCOME TEXT -->
+<!--  DASHBOARD SECTION BELOW WELCOME TEXT -->
+<div class="dashboard-widgets">
+  <!-- 🛒 ADD PRODUCT -->
+  <div class="widget-box">
+    <h2>🛍️ Add New Product</h2>
+    <form id="productForm">
+      <input type="text" id="productName" placeholder="Product Name" required><br>
+      <input type="text" id="productPrice" placeholder="Price" required><br>
+      <textarea id="productDescription" placeholder="Description" required></textarea><br>
+      <button type="submit" class="btn">Upload Product</button>
+    </form>
+  </div>
+
+  <!-- 💳 PAYMENT OPTIONS -->
+  <div class="widget-box">
+    <h2>💳 Payment Method</h2>
+    <form id="paymentOptionsForm">
+      <label><input type="radio" name="paymentMethod" value="JazzCash" required> JazzCash</label><br>
+      <label><input type="radio" name="paymentMethod" value="EasyPaisa"> EasyPaisa</label><br>
+      <label><input type="radio" name="paymentMethod" value="Stripe"> Stripe (Card)</label><br><br>
+      <button type="submit" class="btn">Proceed to Pay</button>
+    </form>
+    <div id="paymentDetails"></div>
+  </div>
+</div>
   </div>
 </body>
 </html>
