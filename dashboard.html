@@ -5,7 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Dashboard - PK INTERNATIONAL</title>
   <link rel="stylesheet" href="style.css"/>
-  <script src="script.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+  <script src="config.js"></script>
+  <script src="script.js" defer></script>
 </head>
 <body>
   <div class="dashboard">
@@ -14,131 +17,219 @@
       <div class="search-bar">
         <input type="text" id="sidebarSearch" placeholder="Search..." oninput="searchSidebar()"/>
       </div>
-      <ul>
-        <ul>
-<ul>
-  <li onclick="showContent('home')">
-    <span class="icon">🏠</span>
-    <span class="text">Home</span>
-    <span class="arrow" id="arrow-home"></span>
-  </li>
+      <ul class="menu-root">
 
-  <li onclick="toggleSubMenu('ordersSub')">
-    <span class="icon">📦</span>
-    <span class="text">Orders</span>
-    <span class="arrow" id="arrow-ordersSub">&#9654;</span>
-  </li>
-  <ul id="ordersSub" class="submenu">
-    <li>Drafts</li>
-    <li>Abandoned</li>
-    <li>Completed</li>
-  </ul>
-  <li onclick="toggleSubMenu('productsSub')">
-    <span class="icon">🛍️</span>
-    <span class="text">Products</span>
-    <span class="arrow" id="arrow-productsSub">&#9654;</span>
-  </li>
-  <ul id="productsSub" class="submenu">
-    <li>Add Product</li>
-    <li>Collections</li>
-    <li>Inventory</li>
-    <li>Purchase Orders</li>
-    <li>Gift Cards</li>
-    <li>Transfers</li>
-  </ul>
-  <li onclick="toggleSubMenu('customersSub')">
-    <span class="icon">👥</span>
-    <span class="text">Customers</span>
-    <span class="arrow" id="arrow-customersSub">&#9654;</span>
-  </li>
-  <ul id="customersSub" class="submenu">
-    <li>All Customers</li>
-    <li>Segments</li>
-  </ul>
+        <li onclick="showContent('homeContent'); setActive(this)">
+          <span class="li-left">
+            <span class="icon" aria-hidden="true">
+              <!-- Home SVG -->
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 3l9 8h-3v9h-5v-6H11v6H6v-9H3l9-8z"/></svg>
+            </span>
+            <span class="text">Home</span>
+          </span>
+        </li>
 
-  <li onclick="toggleSubMenu('marketingSub')">
-    <span class="icon">📢</span>
-    <span class="text">Marketing</span>
-    <span class="arrow" id="arrow-marketingSub">&#9654;</span>
-  </li>
-  <ul id="marketingSub" class="submenu">
-    <li>Campaigns</li>
-    <li>Automation</li>
-  </ul>
-  <li onclick="toggleSubMenu('discountsSub')">
-    <span class="icon">💸</span>
-    <span class="text">Discounts</span>
-    <span class="arrow" id="arrow-discountsSub">&#9654;</span>
-  </li>
-  <ul id="discountsSub" class="submenu">
-    <li>Create Discount</li>
-  </ul>
-  <li onclick="toggleSubMenu('analyticsSub')">
-    <span class="icon">📊</span>
-    <span class="text">Analytics</span>
-    <span class="arrow" id="arrow-analyticsSub">&#9654;</span>
-  </li>
-  <ul id="analyticsSub" class="submenu">
-    <li>Reports</li>
-    <li>Live View</li>
-  </ul>
+        <li onclick="toggleSubMenu('ordersSub', this)">
+          <span class="li-left">
+            <span class="icon">
+              <!-- Orders (cart) -->
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M7 4h12l-1 7H8l-1-7zm-2 9h14l-1 7H6l-1-7zM9 22a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm8 0a2 2 0 1 0 .001-3.999A2 2 0 0 0 17 22z"/></svg>
+            </span>
+            <span class="text">Orders</span>
+          </span>
+          <span class="arrow">
+            <svg viewBox="0 0 24 24" width="12" height="12"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z" fill="currentColor"/></svg>
+          </span>
+        </li>
+        <ul id="ordersSub" class="submenu">
+          <li onclick="showContent('orders-drafts'); setActive(this)">Drafts</li>
+          <li onclick="showContent('orders-abandoned'); setActive(this)">Abandoned</li>
+          <li onclick="showContent('orders-completed'); setActive(this)">Completed</li>
+        </ul>
 
-  <li onclick="toggleSubMenu('settingsSub')">
-    <span class="icon">⚙️</span>
-    <span class="text">Settings</span>
-    <span class="arrow" id="arrow-settingsSub">&#9654;</span>
-  </li>
-  <ul id="settingsSub" class="submenu">
-    <li>General</li>
-    <li>Account</li>
-    <li>Notifications</li>
-  </ul>
+        <li onclick="toggleSubMenu('productsSub', this)">
+          <span class="li-left">
+            <span class="icon">
+              <!-- Box -->
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 2 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16zM12 3.84l6 3.43-6 3.43-6-3.43 6-3.43zM4 9.7l7 4v6.46l-7-4V9.7zm16 6.46l-7 4V13.7l7-4v6.46z"/></svg>
+            </span>
+            <span class="text">Products</span>
+          </span>
+          <span class="arrow">
+            <svg viewBox="0 0 24 24" width="12" height="12"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z" fill="currentColor"/></svg>
+          </span>
+        </li>
+        <ul id="productsSub" class="submenu">
+          <li onclick="showContent('product-add'); setActive(this)">Add Product</li>
+          <li onclick="showContent('product-collections'); setActive(this)">Collections</li>
+          <li onclick="showContent('product-inventory'); setActive(this)">Inventory</li>
+          <li onclick="showContent('product-purchase'); setActive(this)">Purchase Orders</li>
+          <li onclick="showContent('product-giftcards'); setActive(this)">Gift Cards</li>
+          <li onclick="showContent('product-transfers'); setActive(this)">Transfers</li>
+        </ul>
 
-  <li onclick="logout()">
-    <span class="icon">🚪</span>
-    <span class="text">Logout</span>
-  </li>
-</ul>
-        </ul>        
+        <li onclick="toggleSubMenu('customersSub', this)">
+          <span class="li-left">
+            <span class="icon">
+              <!-- Users -->
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5zm0 2c-4 0-10 2-10 6v2h20v-2c0-4-6-6-10-6z"/></svg>
+            </span>
+            <span class="text">Customers</span>
+          </span>
+          <span class="arrow">
+            <svg viewBox="0 0 24 24" width="12" height="12"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z" fill="currentColor"/></svg>
+          </span>
+        </li>
+        <ul id="customersSub" class="submenu">
+          <li onclick="showContent('customers-all'); setActive(this)">All Customers</li>
+          <li onclick="showContent('customers-segments'); setActive(this)">Segments</li>
+        </ul>
+
+        <li onclick="toggleSubMenu('marketingSub', this)">
+          <span class="li-left">
+            <span class="icon">
+              <!-- Bullhorn -->
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M3 11h2l4 8h8V5h2V3H17L9 7H3z"/></svg>
+            </span>
+            <span class="text">Marketing</span>
+          </span>
+          <span class="arrow"><svg viewBox="0 0 24 24" width="12" height="12"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z" fill="currentColor"/></svg></span>
+        </li>
+        <ul id="marketingSub" class="submenu">
+          <li onclick="showContent('marketing-campaigns'); setActive(this)">Campaigns</li>
+          <li onclick="showContent('marketing-automation'); setActive(this)">Automation</li>
+        </ul>
+
+        <li onclick="toggleSubMenu('discountsSub', this)">
+          <span class="li-left">
+            <span class="icon">
+              <!-- Tag/discount -->
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M3 12l9-9 9 9-9 9-9-9zm6 2a2 2 0 1 0 .001-4.001A2 2 0 0 0 9 14zm4 1l4-4"/></svg>
+            </span>
+            <span class="text">Discounts</span>
+          </span>
+          <span class="arrow"><svg viewBox="0 0 24 24" width="12" height="12"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z" fill="currentColor"/></svg></span>
+        </li>
+        <ul id="discountsSub" class="submenu">
+          <li onclick="showContent('discounts-create'); setActive(this)">Create Discount</li>
+        </ul>
+
+        <li onclick="toggleSubMenu('analyticsSub', this)">
+          <span class="li-left">
+            <span class="icon">
+              <!-- Bars -->
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M3 17h2v-7H3v7zm4 0h2V7H7v10zm4 0h2v-4h-2v4zm4 0h2V3h-2v14zm4 2H1v2h22v-2z"/></svg>
+            </span>
+            <span class="text">Analytics</span>
+          </span>
+          <span class="arrow"><svg viewBox="0 0 24 24" width="12" height="12"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z" fill="currentColor"/></svg></span>
+        </li>
+        <ul id="analyticsSub" class="submenu">
+          <li onclick="showContent('analytics-reports'); setActive(this)">Reports</li>
+          <li onclick="showContent('analytics-live'); setActive(this)">Live View</li>
+        </ul>
+
+        <li onclick="toggleSubMenu('settingsSub', this)">
+          <span class="li-left">
+            <span class="icon">
+              <!-- Cog -->
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 8a4 4 0 100 8 4 4 0 000-8zm10 4l-2-1 1-2-2-2-2 1-1-2h-4l-1 2-2-1-2 2 1 2-2 1v4l2 1-1 2 2 2 2-1 1 2h4l1-2 2 1 2-2-1-2 2-1v-4z"/></svg>
+            </span>
+            <span class="text">Settings</span>
+          </span>
+          <span class="arrow"><svg viewBox="0 0 24 24" width="12" height="12"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z" fill="currentColor"/></svg></span>
+        </li>
+        <ul id="settingsSub" class="submenu">
+          <li onclick="showContent('settings-general'); setActive(this)">General</li>
+          <li onclick="showContent('settings-account'); setActive(this)">Account</li>
+          <li onclick="showContent('settings-notifications'); setActive(this)">Notifications</li>
+        </ul>
+
+        <li onclick="logout()">
+          <span class="li-left">
+            <span class="icon">
+              <!-- Logout -->
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M16 13v-2H7V7l-5 5 5 5v-4h9zM20 3h-8v2h8v14h-8v2h8c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>
+            </span>
+            <span class="text">Logout</span>
+          </span>
+        </li>
+
       </ul>
     </aside>
+
     <main class="main-content" id="mainContent">
       <div class="top-bar">
         <div class="store-info">
           <h2>PK INTERNATIONAL</h2>
           <p id="welcomeText">Welcome to your admin dashboard</p>
         </div>
-        
         <button onclick="logout()" class="btn">Logout</button>
       </div>
-      <div id="homeContent" class="content-section">
-        <h3 id="homeWelcomeText">Welcome back to store</h3>
-        <!--  DASHBOARD SECTION BELOW WELCOME TEXT -->
-<!--  DASHBOARD SECTION BELOW WELCOME TEXT -->
-<div class="dashboard-widgets">
-  <!-- 🛒 ADD PRODUCT -->
-  <div class="widget-box">
-    <h2>🛍️ Add New Product</h2>
-    <form id="productForm">
-      <input type="text" id="productName" placeholder="Product Name" required><br>
-      <input type="text" id="productPrice" placeholder="Price" required><br>
-      <textarea id="productDescription" placeholder="Description" required></textarea><br>
-      <button type="submit" class="btn">Upload Product</button>
-    </form>
-  </div>
 
-  <!-- 💳 PAYMENT OPTIONS -->
-  <div class="widget-box">
-    <h2>💳 Payment Method</h2>
-    <form id="paymentOptionsForm">
-      <label><input type="radio" name="paymentMethod" value="JazzCash" required> JazzCash</label><br>
-      <label><input type="radio" name="paymentMethod" value="EasyPaisa"> EasyPaisa</label><br>
-      <label><input type="radio" name="paymentMethod" value="Stripe"> Stripe (Card)</label><br><br>
-      <button type="submit" class="btn">Proceed to Pay</button>
-    </form>
-    <div id="paymentDetails"></div>
-  </div>
-</div>
+      <!-- HOME -->
+      <section id="homeContent" class="content-section active">
+        <h3 id="homeWelcomeText" class="centered-welcome">Welcome back to store</h3>
+
+        <div class="dashboard-widgets">
+          <!-- Add Product Widget -->
+          <div class="widget-box">
+            <h2>Add New Product</h2>
+            <form id="productForm">
+              <input type="text" id="productName" placeholder="Product Name" required>
+              <input type="text" id="productPrice" placeholder="Price" required>
+              <textarea id="productDescription" placeholder="Description" required></textarea>
+              <button type="submit" class="btn">Upload Product</button>
+            </form>
+          </div>
+
+          <!-- Payments Widget -->
+          <div class="widget-box">
+            <h2>Payment Method</h2>
+            <form id="paymentOptionsForm">
+              <label><input type="radio" name="paymentMethod" value="JazzCash" required> JazzCash</label><br>
+              <label><input type="radio" name="paymentMethod" value="EasyPaisa"> EasyPaisa</label><br>
+              <label><input type="radio" name="paymentMethod" value="Stripe"> Stripe (Card)</label><br><br>
+              <button type="submit" class="btn">Proceed to Pay</button>
+            </form>
+            <div id="paymentDetails"></div>
+          </div>
+        </div>
+
+        <div class="products-list">
+          <h3>Products (Realtime)</h3>
+          <ul id="productsUl"></ul>
+        </div>
+      </section>
+
+      <!-- Other section shells -->
+      <section id="orders-drafts" class="content-section"><h3>Draft Orders</h3></section>
+      <section id="orders-abandoned" class="content-section"><h3>Abandoned</h3></section>
+      <section id="orders-completed" class="content-section"><h3>Completed</h3></section>
+
+      <section id="product-add" class="content-section"><h3>Use the Add Product form on Home.</h3></section>
+      <section id="product-collections" class="content-section"><h3>Collections (coming soon)</h3></section>
+      <section id="product-inventory" class="content-section"><h3>Inventory (coming soon)</h3></section>
+      <section id="product-purchase" class="content-section"><h3>Purchase Orders (coming soon)</h3></section>
+      <section id="product-giftcards" class="content-section"><h3>Gift Cards (coming soon)</h3></section>
+      <section id="product-transfers" class="content-section"><h3>Transfers (coming soon)</h3></section>
+
+      <section id="customers-all" class="content-section"><h3>All Customers (coming soon)</h3></section>
+      <section id="customers-segments" class="content-section"><h3>Segments (coming soon)</h3></section>
+
+      <section id="marketing-campaigns" class="content-section"><h3>Campaigns (coming soon)</h3></section>
+      <section id="marketing-automation" class="content-section"><h3>Automation (coming soon)</h3></section>
+
+      <section id="discounts-create" class="content-section"><h3>Create Discount (coming soon)</h3></section>
+
+      <section id="analytics-reports" class="content-section"><h3>Reports (coming soon)</h3></section>
+      <section id="analytics-live" class="content-section"><h3>Live View (coming soon)</h3></section>
+
+      <section id="settings-general" class="content-section"><h3>General (coming soon)</h3></section>
+      <section id="settings-account" class="content-section"><h3>Account (coming soon)</h3></section>
+      <section id="settings-notifications" class="content-section"><h3>Notifications (coming soon)</h3></section>
+
+    </main>
   </div>
 </body>
 </html>

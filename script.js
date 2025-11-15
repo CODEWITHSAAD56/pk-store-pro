@@ -1,161 +1,152 @@
-// ✅ Firebase config
-const firebaseConfig = {
-  apiKey: "AIzaSyDrhmIcWcS8AhP-41q2OCzGrHteKJCDkUQ",
-  authDomain: "database-eade8.firebaseapp.com",
-  databaseURL: "https://database-eade8-default-rtdb.asia-southeast1.firebasedatabase.app/",  // ✅ THIS LINE IS REQUIRED
-  projectId: "database-eade8",
-  storageBucket: "database-eade8.appspot.com",
-  messagingSenderId: "338136504463",
-  appId: "1:338136504463:web:7f2c217c23d7f6afb7b8fa"
-};
+// Initialize Firebase v8
+(function(){
+  const cfg = window.__FIREBASE_CONFIG__;
+  if (!firebase.apps.length) firebase.initializeApp(cfg);
+  window.db = firebase.database();
+})();
 
-// ✅ Initialize Firebase (v8 CDN compatible)
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
-
-// ✅ Signup function
-function handleSignup(event) {
-  event.preventDefault();
-  const name = document.getElementById('signupName').value;
-  const email = document.getElementById('signupEmail').value;
+// ---- AUTH (simple DB-based) ----
+function handleSignup(e){
+  e.preventDefault();
+  const name = document.getElementById('signupName').value.trim();
+  const email = document.getElementById('signupEmail').value.trim().toLowerCase();
   const password = document.getElementById('signupPassword').value;
 
-  db.ref("users").orderByChild("email").equalTo(email).once("value", snapshot => {
-    if (snapshot.exists()) {
-      alert("This email is already registered.");
-    } else {
-      const userData = { name, email, password, createdAt: new Date().toISOString() };
-      db.ref("users").push(userData).then(() => {
-        localStorage.setItem("currentUser", JSON.stringify(userData));
-        alert("Signup successful!");
-        window.location.href = "dashboard.html";
-      });
-    }
+  db.ref('users').orderByChild('email').equalTo(email).once('value', snap=>{
+    if(snap.exists()){ alert('This email is already registered.'); return; }
+    const user = { name, email, password, createdAt: new Date().toISOString() };
+    db.ref('users').push(user).then(()=>{
+      localStorage.setItem('currentUser', JSON.stringify(user));
+      location.href='dashboard.html';
+    });
   });
 }
 
-// ✅ Login function
-function handleLogin(event) {
-  event.preventDefault();
-  const email = document.getElementById('loginEmail').value;
+function handleLogin(e){
+  e.preventDefault();
+  const email = document.getElementById('loginEmail').value.trim().toLowerCase();
   const password = document.getElementById('loginPassword').value;
 
-  db.ref("users").once("value", snapshot => {
-    let found = false;
-    snapshot.forEach(child => {
-      const user = child.val();
-      if (user.email === email && user.password === password) {
-        localStorage.setItem("currentUser", JSON.stringify(user));
-        alert("Login successful!");
-        window.location.href = "dashboard.html";
-        found = true;
-      }
-    });
-    if (!found) {
-      alert("Invalid email or password.");
-    }
+  db.ref('users').orderByChild('email').equalTo(email).once('value', snap=>{
+    if(!snap.exists()){ alert('Email not registered.'); return; }
+    let ok=false; snap.forEach(ch=>{ const u=ch.val(); if(u.password===password){ ok=true; localStorage.setItem('currentUser', JSON.stringify(u)); } });
+    if(ok){ location.href='dashboard.html'; } else { alert('Invalid password.'); }
   });
 }
 
-// ✅ Dashboard welcome setup
-window.onload = function () {
+// Attach on load
+document.addEventListener('DOMContentLoaded', () => {
+  const signupForm = document.getElementById('signupForm');
+  if (signupForm) signupForm.addEventListener('submit', handleSignup);
+
+  const loginForm = document.getElementById('loginForm');
+  if (loginForm) loginForm.addEventListener('submit', handleLogin);
+
+  // Dashboard boot
+  if (document.querySelector('.dashboard')) {
+    bootDashboard();
+  }
+});
+
+// ---- DASHBOARD ----
+function bootDashboard(){
+  // Welcome
+  const userStr = localStorage.getItem('currentUser');
   const homeWelcome = document.getElementById('homeWelcomeText');
-  const userData = localStorage.getItem("currentUser");
-
-  if (homeWelcome && userData) {
-    const user = JSON.parse(userData);
-
-    if (user && user.name) {
-      homeWelcome.textContent = `WELCOME BACK, ${user.name.toUpperCase()}`;
-      const textEl = document.getElementById("welcomeText");
-      if (textEl) {
-        textEl.textContent = `Welcome, ${user.name}`;
-      }
-    } else {
-      homeWelcome.textContent = "WELCOME BACK!";
-    }
+  const welcomeText = document.getElementById('welcomeText');
+  if(userStr){
+    const u = JSON.parse(userStr);
+    if (homeWelcome) homeWelcome.textContent = 'WELCOME BACK, ' + (u.name||'User').toUpperCase();
+    if (welcomeText) welcomeText.textContent = 'Welcome, ' + (u.name||'User');
   }
-};
-function logout() {
-  localStorage.removeItem("currentUser");
-  window.location.href = "index.html";
-}
 
-function toggleSubMenu(id) {
-  const allSubMenus = document.querySelectorAll('.submenu');
-  allSubMenus.forEach(submenu => {
-    if (submenu.id !== id) submenu.style.display = "none";
-  });
-  const submenu = document.getElementById(id);
-  submenu.style.display = submenu.style.display === "block" ? "none" : "block";
-}
+  // Sidebar events: rotate arrow + toggle submenu + show content
+  window.toggleSubMenu = function(id, li){
+    // close others
+    document.querySelectorAll('.submenu').forEach(sm => { if (sm.id !== id) sm.style.display='none'; });
+    document.querySelectorAll('.menu-root>li').forEach(item => item.classList.remove('active'));
 
-function showContent(section) {
-  const homeContent = document.getElementById('homeContent');
-  const settingsContent = document.getElementById('settingsContent');
-  if (section === 'home') {
-    homeContent.style.display = 'block';
-    settingsContent.style.display = 'none';
-  } else if (section === 'settings') {
-    homeContent.style.display = 'none';
-    settingsContent.style.display = 'block';
-  }
-}
-
-function searchSidebar() {
-  const input = document.getElementById('sidebarSearch').value.toLowerCase();
-  const sidebarItems = document.querySelectorAll('.sidebar li');
-  sidebarItems.forEach(item => {
-    item.classList.toggle('highlight', item.textContent.toLowerCase().includes(input));
-  });
-}
-//  Product Upload to Firebase
-document.getElementById("productForm").addEventListener("submit", function (e) {
-  e.preventDefault();
-  const name = document.getElementById("productName").value;
-  const price = document.getElementById("productPrice").value;
-  const description = document.getElementById("productDescription").value;
-
-  const newProduct = {
-    name,
-    price,
-    description,
-    createdAt: new Date().toISOString(),
+    // toggle this
+    const sm = document.getElementById(id);
+    if(!sm) return;
+    const isOpen = sm.style.display==='block';
+    sm.style.display = isOpen ? 'none' : 'block';
+    if(li){ li.classList.toggle('active', !isOpen); }
   };
 
-  db.ref("products").push(newProduct).then(() => {
-    alert("✅ Product uploaded successfully!");
-    document.getElementById("productForm").reset();
-  });
-});
+  window.showContent = function(id){
+    document.querySelectorAll('.content-section').forEach(s=>s.classList.remove('active'));
+    const target = document.getElementById(id);
+    if (target) target.classList.add('active');
+  };
 
-//  Payment Option Selection
-document.getElementById("paymentOptionsForm").addEventListener("submit", function (e) {
-  e.preventDefault();
+  window.setActive = function(li){
+    document.querySelectorAll('.menu-root>li').forEach(item => item.classList.remove('active'));
+    const parentLi = li.closest('ul').previousElementSibling;
+    if (parentLi && parentLi.tagName==='LI') parentLi.classList.add('active');
+  };
 
-  const selected = document.querySelector("input[name='paymentMethod']:checked").value;
-  const detailsDiv = document.getElementById("paymentDetails");
+  // Search highlight
+  window.searchSidebar = function (){
+    const q = (document.getElementById('sidebarSearch').value||'').toLowerCase();
+    document.querySelectorAll('.sidebar li').forEach(li=>{
+      li.classList.toggle('highlight', li.textContent.toLowerCase().includes(q) && q.length>0);
+    });
+  };
 
-  if (selected === "JazzCash") {
-    detailsDiv.innerHTML = `
-      <p><strong>JazzCash Number:</strong> 0300-XXXXXXX</p>
-      <p><strong>Account Title:</strong> PK International</p>
-      <p>Please share screenshot via <a href="https://wa.me/923001234567" target="_blank">WhatsApp</a></p>
-    `;
-  } else if (selected === "EasyPaisa") {
-    detailsDiv.innerHTML = `
-      <p><strong>EasyPaisa Number:</strong> 0345-XXXXXXX</p>
-      <p><strong>Account Title:</strong> PK International</p>
-      <p>Please share screenshot via <a href="https://wa.me/923001234567" target="_blank">WhatsApp</a></p>
-    `;
-  } else if (selected === "Stripe") {
-    window.open("https://buy.stripe.com/test_123456789", "_blank");
+  // Logout
+  window.logout = function(){
+    localStorage.removeItem('currentUser');
+    location.href='index.html';
+  };
+
+  // Product upload
+  const productForm = document.getElementById('productForm');
+  if(productForm){
+    productForm.addEventListener('submit', function(e){
+      e.preventDefault();
+      const name = document.getElementById('productName').value.trim();
+      const price = document.getElementById('productPrice').value.trim();
+      const description = document.getElementById('productDescription').value.trim();
+      if(!name||!price||!description){ alert('All fields required'); return; }
+      const item = { name, price, description, createdAt: new Date().toISOString() };
+      db.ref('products').push(item).then(()=>{
+        alert('✅ Product uploaded');
+        productForm.reset();
+      });
+    });
   }
 
-  // Optional: Store selected payment method
-  const userId = "user-" + Date.now();
-  db.ref("payments/" + userId).set({
-    method: selected,
-    createdAt: new Date().toISOString()
-  });
-});
+  // Live products list
+  const productsUl = document.getElementById('productsUl');
+  if(productsUl){
+    db.ref('products').on('value', snap=>{
+      productsUl.innerHTML='';
+      snap.forEach(ch=>{
+        const p = ch.val();
+        const li = document.createElement('li');
+        li.textContent = p.name + ' — Rs.' + p.price + ' — ' + p.description;
+        productsUl.appendChild(li);
+      });
+    });
+  }
+
+  // Payments
+  const paymentForm = document.getElementById('paymentOptionsForm');
+  const paymentDetails = document.getElementById('paymentDetails');
+  if(paymentForm){
+    paymentForm.addEventListener('submit', function(e){
+      e.preventDefault();
+      const selected = document.querySelector("input[name='paymentMethod']:checked").value;
+      if(selected==='JazzCash'){
+        paymentDetails.innerHTML = '<p><b>JazzCash Number:</b> 0300-XXXXXXX</p><p><b>Account Title:</b> PK International</p><p>Share receipt on <a target="_blank" href="https://wa.me/923001234567">WhatsApp</a></p>';
+      }else if(selected==='EasyPaisa'){
+        paymentDetails.innerHTML = '<p><b>EasyPaisa Number:</b> 0345-XXXXXXX</p><p><b>Account Title:</b> PK International</p><p>Share receipt on <a target="_blank" href="https://wa.me/923001234567">WhatsApp</a></p>';
+      }else{
+        window.open('https://buy.stripe.com/test_123456789','_blank');
+      }
+      const key = 'pay-' + Date.now();
+      db.ref('payments/'+key).set({method:selected, at:new Date().toISOString()});
+    });
+  }
+}
